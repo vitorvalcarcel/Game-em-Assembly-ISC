@@ -1,22 +1,18 @@
 .data
 
-
-# oiiiiiiiiiiiiiiiii
-
-
 # Sprites
-	.include "sprites/tile.s"
-	.include "sprites/map.s"
-	.include "sprites/char.s"
+	.include "sprites/fundoGame.data"
+	.include "sprites/char.data"
 
 # Dados
+	POS_00: .half 0,0			
 	POS_PERSON: .half 0,0			# x, y
 	POS_PERSON_ANTE: .half 0,0		# x, y
 
 .text
 SETUP:		# Faz o carregamento dos dados iniciais do jogo
 
-		la a0,map			# carrega o endereco do sprite 'map' em a0
+		la a0,fundoGame			# carrega o endereco do sprite 'map' em a0
 		li a1,0				# x = 0
 		li a2,0				# y = 0
 		li a3,0				# frame = 0
@@ -45,9 +41,9 @@ GAME_LOOP:	# È o loop do jogo que vai ficar rodando todo o tempo
 		#########################################
 		# Limpeza do "rastro" do personagem 	#
 		#########################################
-		la t0,POS_PERSON_ANTE			# carrega em t0 o endereco de OLD_CHAR_POS
+		la t0,POS_00				# carrega em t0 o endereco de OLD_CHAR_POS
 							#
-		la a0,tile				# carrega o endereco do sprite 'tile' em a0
+		la a0,fundoGame				# carrega o endereco do sprite 'tile' em a0
 		lh a1,0(t0)				# carrega a posicao x antiga do personagem em a1
 		lh a2,2(t0)				# carrega a posicao y antiga do personagem em a2
 							#
@@ -97,7 +93,7 @@ CHAR_DIR:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
 		
-		la t0,CHAR_POS
+		la t0,POS_PERSON
 		lh t1,0(t0)			# carrega o x atual do personagem
 		addi t1,t1,16			# incrementa 16 pixeis
 		sh t1,0(t0)			# salva
@@ -119,7 +115,7 @@ CHAR_BAIXO:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
 		
-		la t0,CHAR_POS
+		la t0,POS_PERSON
 		lh t1,2(t0)			# carrega o y atual do personagem
 		addi t1,t1,16			# incrementa 16 pixeis
 		sh t1,2(t0)			# salva
