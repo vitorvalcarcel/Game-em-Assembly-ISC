@@ -3,11 +3,57 @@
 # Sprites
 	.include "sprites/fundoGame.data"
 	.include "sprites/felixParado.data"
+	.include "sprites/felixmenor.data"
 
 # Dados
 	POS_00: .half 0,0			
-	POS_PERSON: .half 0,0			# x, y
+	POS_PERSON: .half 77, 198		# x, y
 	POS_PERSON_ANTE: .half 0,0		# x, y
+
+#altura periodo e duração do#
+	notas: .word 41, 0, 0,
+
+	67,240, 0,
+	67,240, 0,
+	67,240, 0,
+	67,480, 0,
+	64,240, 0,
+	64,240, 0,
+	64,240, 0,
+	65,240, 0,
+	65,480, 0,
+	65,720, 0,
+	62,240, 0,
+	62,240, 0,
+	65,240, 0,
+	65,480, 0,
+	65,720, 0,
+	62,240, 0,
+	62,240, 0,
+	65,240, 0,
+	64,240, 0,
+	62,240, 0,
+	60,1200, 0,
+	67,240, 0,
+	67,240, 0,
+	67,240, 0,
+	67,480, 0,
+	64,240, 0,
+	64,240, 0,
+	64,240, 0,
+	65,240, 0,
+	65,480, 0,
+	65,720, 0,
+	60,240, 0,
+	60,240, 0,
+	64,480, 0,
+	62,240, 0,
+	60,1200, 0,
+	64,480, 0,
+	64,480, 0,
+	64,480, 0,
+	60,240, 0,
+	60,240, 0,
 
 .text
 SETUP:		# Faz o carregamento dos dados iniciais do jogo
@@ -21,7 +67,52 @@ SETUP:		# Faz o carregamento dos dados iniciais do jogo
 		call PRINT			# imprime o sprite
 		# esse setup serve pra desenhar o "mapa" nos dois frames antes do "jogo" comecar
 
-GAME_LOOP:	# � o loop do jogo que vai ficar rodando todo o tempo
+GAME_LOOP:	# � o loop do jogo que vai ficar rodando todo o tempo
+
+## Musica ##
+
+		la s1, notas
+		lw s2, 0(s1) #quantas notas existem
+		lw s3, 4(s1) #em que nota eu estou
+		lw s4, 8(s1) #quand a ultima nota foi tocada do 6
+
+		li t0, 12
+		mul s5, t0, s3
+		add s5, s5, s1  #endereço da nota atual do 6
+
+		li a7, 30
+		ecall
+
+		sub s6, a0, s4 # quanto tempo já se passou desde que a última nota foi tocada
+
+		lw t1, 4(s5)
+		bgtu t1, s6, MF0 
+				#se já for pra tocar a próxima nota do, 6
+			
+			bne s3, s2, MF1
+				li s3, 0
+				mv s5, s1
+			MF1:
+				addi s5, s5, 12
+
+				li a7, 31
+				lw a0, 0(s5)
+				lw a1, 4(s5)
+				li a2, 1
+				li a3, 90
+				ecall
+
+				li a7, 30
+				ecall
+
+				sw a0, 8(s1)
+
+				addi s3, s3, 1
+				sw s3, 4(s1)
+				
+		MF0:
+
+		## Termina musica ##
 
 		call TECLADO			# chama o procedimento de entrada do teclado
 		
@@ -29,7 +120,9 @@ GAME_LOOP:	# � o loop do jogo que vai ficar rodando todo o tempo
 		
 		la t0,POS_PERSON		# carrega em t0 o endereco de CHAR_POS
 		
-		la a0,felixParado			# carrega o endereco do sprite 'char' em a0
+		la a0,felixParado			# carrega o endereco do sprite 'felix parado' em a0
+		beq s0, zero, FELIXMENOR
+	volta:
 		lh a1,0(t0)			# carrega a posicao x do personagem em a1
 		lh a2,2(t0)			# carrega a posicao y do personagem em a2
 		mv a3,s0			# carrega o valor do frame em a3
@@ -82,6 +175,13 @@ CHAR_ESQ:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
 		la t1,POS_PERSON_ANTE		# carrega em t1 o endereco de OLD_CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
+
+		li a0, 75
+		li a1, 250
+		li a2, 1
+		li a3, 127
+		li a7, 31
+		ecall
 		
 		lh t1,0(t0)			# carrega o x atual do personagem
 		addi t1,t1,-16			# decrementa 16 pixeis
@@ -92,6 +192,13 @@ CHAR_DIR:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
 		la t1,POS_PERSON_ANTE		# carrega em t1 o endereco de OLD_CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
+
+		li a0, 75
+		li a1, 250
+		li a2, 1
+		li a3, 127
+		li a7, 31
+		ecall
 		
 		la t0,POS_PERSON
 		lh t1,0(t0)			# carrega o x atual do personagem
@@ -103,6 +210,13 @@ CHAR_CIMA:	la t0,POS_PERSON		# carrega em t0 o endereco de CHAR_POS
 		la t1,POS_PERSON_ANTE		# carrega em t1 o endereco de OLD_CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
+
+		li a0, 75
+		li a1, 250
+		li a2, 1
+		li a3, 127
+		li a7, 31
+		ecall
 		
 		la t0,POS_PERSON
 		lh t1,2(t0)			# carrega o y atual do personagem
@@ -114,12 +228,30 @@ CHAR_BAIXO:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
 		la t1,POS_PERSON_ANTE		# carrega em t1 o endereco de OLD_CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
+
+		li a0, 75
+		li a1, 250
+		li a2, 1
+		li a3, 127
+		li a7, 31
+		ecall
 		
 		la t0,POS_PERSON
 		lh t1,2(t0)			# carrega o y atual do personagem
 		addi t1,t1,16			# incrementa 16 pixeis
 		sh t1,2(t0)			# salva
 		ret
+
+###############################################################################################################
+# Efeitos sonoros#
+EFEITOS:
+	li a0, 40
+	li a1, 250
+	li a2, 1
+	li a3, 100
+	li a7, 31
+	ecall
+	
 		
 
 ###############################################################################################################
@@ -127,7 +259,7 @@ CHAR_BAIXO:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
 # Procedimentos de print
 
 #################################################
-#	a0 = endere�o imagem			#
+#	a0 = endere�o imagem			#
 #	a1 = x					#
 #	a2 = y					#
 #	a3 = frame (0 ou 1)			#
@@ -176,3 +308,7 @@ PRINT_LINHA:	lw t6,0(t1)			# carrega em t6 uma word (4 pixeis) da imagem
 		bgt t5,t2,PRINT_LINHA		# se altura > contador de linha, continue imprimindo
 		
 		ret				# retorna
+
+	FELIXMENOR:
+		la a0, felixmenor
+		j volta
