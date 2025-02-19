@@ -2,12 +2,29 @@
 
 # Sprites
 	.include "sprites/fundoGame.data"
-	.include "sprites/char.data"
+	.include "sprites/felixParado.data"
 
 # Dados
 	POS_00: .half 0,0			
-	POS_PERSON: .half 0,0			# x, y
+	POS_PERSON: .half 77, 198		# x, y inicial (Janela 11)
 	POS_PERSON_ANTE: .half 0,0		# x, y
+	
+	# Coordenadas das janelas
+	
+	JANELA_11:	.half 88, 198
+	JANELA_12:	.half 120, 198
+	JANELA_13:	.half 188, 198
+	JANELA_14:	.half 216, 198
+	JANELA_21:	.half 88, 138
+	JANELA_22:	.half 120, 138
+	JANELA_23:	.half 188, 138
+	JANELA_24:	.half 216, 138
+	JANELA_31:	.half 88, 78
+	JANELA_32:	.half 120, 78
+	JANELA_33:	.half 154, 78
+	JANELA_34:	.half 188, 78
+	JANELA_35:	.half 216, 78
+
 
 .text
 SETUP:		# Faz o carregamento dos dados iniciais do jogo
@@ -29,7 +46,7 @@ GAME_LOOP:	# È o loop do jogo que vai ficar rodando todo o tempo
 		
 		la t0,POS_PERSON		# carrega em t0 o endereco de CHAR_POS
 		
-		la a0,char			# carrega o endereco do sprite 'char' em a0
+		la a0,felixParado			# carrega o endereco do sprite 'char' em a0
 		lh a1,0(t0)			# carrega a posicao x do personagem em a1
 		lh a2,2(t0)			# carrega a posicao y do personagem em a2
 		mv a3,s0			# carrega o valor do frame em a3
@@ -62,62 +79,62 @@ TECLADO:	# Verifica se o teclado foi pressionado e se foi, chama o procedimento 
   		lw t2,4(t1)  			# le o valor da tecla tecla
 		
 		li t0,'w'
-		beq t2,t0,CHAR_CIMA		# se tecla pressionada for 'w', chama CHAR_CIMA
+		beq t2,t0,PER_SOBE		# se tecla pressionada for 'w', chama CHAR_CIMA
 		
 		li t0,'a'
-		beq t2,t0,CHAR_ESQ		# se tecla pressionada for 'a', chama CHAR_CIMA
+		beq t2,t0,PER_ESQU		# se tecla pressionada for 'a', chama CHAR_CIMA
 		
 		li t0,'s'
-		beq t2,t0,CHAR_BAIXO		# se tecla pressionada for 's', chama CHAR_CIMA
+		beq t2,t0,PER_DESC		# se tecla pressionada for 's', chama CHAR_CIMA
 		
 		li t0,'d'
-		beq t2,t0,CHAR_DIR		# se tecla pressionada for 'd', chama CHAR_CIMA
+		beq t2,t0,PER_DIRE		# se tecla pressionada for 'd', chama CHAR_CIMA
 	
 FIM:		ret				# retorna
 
 #############################################################################################################
 # Procedimentos de teclado
 
-CHAR_ESQ:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
+PER_ESQU:	la t0,POS_PERSON		# carrega em t0 o endereco de CHAR_POS
 		la t1,POS_PERSON_ANTE		# carrega em t1 o endereco de OLD_CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
 		
 		lh t1,0(t0)			# carrega o x atual do personagem
-		addi t1,t1,-16			# decrementa 16 pixeis
+		addi t1,t1,-32			# decrementa 16 pixeis
 		sh t1,0(t0)			# salva
 		ret
 
-CHAR_DIR:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
+PER_DIRE:	la t0,POS_PERSON		# carrega em t0 o endereco de CHAR_POS
 		la t1,POS_PERSON_ANTE		# carrega em t1 o endereco de OLD_CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
 		
 		la t0,POS_PERSON
 		lh t1,0(t0)			# carrega o x atual do personagem
-		addi t1,t1,16			# incrementa 16 pixeis
+		addi t1,t1,32			# incrementa 16 pixeis
 		sh t1,0(t0)			# salva
 		ret
 
-CHAR_CIMA:	la t0,POS_PERSON		# carrega em t0 o endereco de CHAR_POS
+PER_SOBE:	la t0,POS_PERSON		# carrega em t0 o endereco de CHAR_POS
 		la t1,POS_PERSON_ANTE		# carrega em t1 o endereco de OLD_CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
 		
 		la t0,POS_PERSON
 		lh t1,2(t0)			# carrega o y atual do personagem
-		addi t1,t1,-16			# decrementa 16 pixeis
+		addi t1,t1,-32			# decrementa 16 pixeis
 		sh t1,2(t0)			# salva
 		ret
 
-CHAR_BAIXO:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
+PER_DESC:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
 		la t1,POS_PERSON_ANTE		# carrega em t1 o endereco de OLD_CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
 		
 		la t0,POS_PERSON
 		lh t1,2(t0)			# carrega o y atual do personagem
-		addi t1,t1,16			# incrementa 16 pixeis
+		addi t1,t1,32			# incrementa 16 pixeis
 		sh t1,2(t0)			# salva
 		ret
 		
