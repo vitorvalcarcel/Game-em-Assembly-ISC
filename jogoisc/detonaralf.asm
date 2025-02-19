@@ -6,25 +6,8 @@
 
 # Dados
 	POS_00: .half 0,0			
-	POS_PERSON: .half 77, 198		# x, y inicial (Janela 11)
+	POS_PERSON: .half 0,0			# x, y
 	POS_PERSON_ANTE: .half 0,0		# x, y
-	
-	# Coordenadas das janelas
-	
-	JANELA_11:	.half 88, 198
-	JANELA_12:	.half 120, 198
-	JANELA_13:	.half 188, 198
-	JANELA_14:	.half 216, 198
-	JANELA_21:	.half 88, 138
-	JANELA_22:	.half 120, 138
-	JANELA_23:	.half 188, 138
-	JANELA_24:	.half 216, 138
-	JANELA_31:	.half 88, 78
-	JANELA_32:	.half 120, 78
-	JANELA_33:	.half 154, 78
-	JANELA_34:	.half 188, 78
-	JANELA_35:	.half 216, 78
-
 
 .text
 SETUP:		# Faz o carregamento dos dados iniciais do jogo
@@ -79,62 +62,62 @@ TECLADO:	# Verifica se o teclado foi pressionado e se foi, chama o procedimento 
   		lw t2,4(t1)  			# le o valor da tecla tecla
 		
 		li t0,'w'
-		beq t2,t0,PER_SOBE		# se tecla pressionada for 'w', chama CHAR_CIMA
+		beq t2,t0,CHAR_CIMA		# se tecla pressionada for 'w', chama CHAR_CIMA
 		
 		li t0,'a'
-		beq t2,t0,PER_ESQU		# se tecla pressionada for 'a', chama CHAR_CIMA
+		beq t2,t0,CHAR_ESQ		# se tecla pressionada for 'a', chama CHAR_CIMA
 		
 		li t0,'s'
-		beq t2,t0,PER_DESC		# se tecla pressionada for 's', chama CHAR_CIMA
+		beq t2,t0,CHAR_BAIXO		# se tecla pressionada for 's', chama CHAR_CIMA
 		
 		li t0,'d'
-		beq t2,t0,PER_DIRE		# se tecla pressionada for 'd', chama CHAR_CIMA
+		beq t2,t0,CHAR_DIR		# se tecla pressionada for 'd', chama CHAR_CIMA
 	
 FIM:		ret				# retorna
 
 #############################################################################################################
 # Procedimentos de teclado
 
-PER_ESQU:	la t0,POS_PERSON		# carrega em t0 o endereco de CHAR_POS
+CHAR_ESQ:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
 		la t1,POS_PERSON_ANTE		# carrega em t1 o endereco de OLD_CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
 		
 		lh t1,0(t0)			# carrega o x atual do personagem
-		addi t1,t1,-32			# decrementa 16 pixeis
+		addi t1,t1,-16			# decrementa 16 pixeis
 		sh t1,0(t0)			# salva
 		ret
 
-PER_DIRE:	la t0,POS_PERSON		# carrega em t0 o endereco de CHAR_POS
+CHAR_DIR:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
 		la t1,POS_PERSON_ANTE		# carrega em t1 o endereco de OLD_CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
 		
 		la t0,POS_PERSON
 		lh t1,0(t0)			# carrega o x atual do personagem
-		addi t1,t1,32			# incrementa 16 pixeis
+		addi t1,t1,16			# incrementa 16 pixeis
 		sh t1,0(t0)			# salva
 		ret
 
-PER_SOBE:	la t0,POS_PERSON		# carrega em t0 o endereco de CHAR_POS
+CHAR_CIMA:	la t0,POS_PERSON		# carrega em t0 o endereco de CHAR_POS
 		la t1,POS_PERSON_ANTE		# carrega em t1 o endereco de OLD_CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
 		
 		la t0,POS_PERSON
 		lh t1,2(t0)			# carrega o y atual do personagem
-		addi t1,t1,-32			# decrementa 16 pixeis
+		addi t1,t1,-16			# decrementa 16 pixeis
 		sh t1,2(t0)			# salva
 		ret
 
-PER_DESC:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
+CHAR_BAIXO:	la t0,POS_PERSON			# carrega em t0 o endereco de CHAR_POS
 		la t1,POS_PERSON_ANTE		# carrega em t1 o endereco de OLD_CHAR_POS
 		lw t2,0(t0)
 		sw t2,0(t1)			# salva a posicao atual do personagem em OLD_CHAR_POS
 		
 		la t0,POS_PERSON
 		lh t1,2(t0)			# carrega o y atual do personagem
-		addi t1,t1,32			# incrementa 16 pixeis
+		addi t1,t1,16			# incrementa 16 pixeis
 		sh t1,2(t0)			# salva
 		ret
 		
@@ -193,4 +176,3 @@ PRINT_LINHA:	lw t6,0(t1)			# carrega em t6 uma word (4 pixeis) da imagem
 		bgt t5,t2,PRINT_LINHA		# se altura > contador de linha, continue imprimindo
 		
 		ret				# retorna
-
